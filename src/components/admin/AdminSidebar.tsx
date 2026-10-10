@@ -15,8 +15,6 @@ import {
   LogOut,
   ShieldCheck,
 } from "lucide-react";
-import { auth } from "@/lib/firebase/client";
-import { signOut } from "firebase/auth";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -33,7 +31,7 @@ export const AdminSidebar: React.FC = () => {
   const pathname = usePathname();
 
   const handleSignOut = async () => {
-    await signOut(auth);
+    await fetch("/api/admin/logout", { method: "POST" });
     window.location.href = "/";
   };
 

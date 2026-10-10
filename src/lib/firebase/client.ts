@@ -1,8 +1,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// Safe API key ensuring getAuth() never throws during SSR or static prerendering on Vercel
+// Safe API key — prevents crash during Vercel static prerendering when env vars are absent at build time
 const apiKey =
   process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
   process.env.NEXT_PUBLIC_FIREBASE_API_KEY.trim() !== ""
@@ -18,16 +17,6 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:123456789:web:abcdef",
 };
 
-// Singleton initialization to prevent duplicate apps
+// Singleton — prevents duplicate app initialization in dev HMR
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: "select_account" });
 export const db = getFirestore(app);
-
-export const ADMIN_EMAIL = "muhammmadzainumer@gmail.com";
-
-export function isAuthorizedAdmin(email: string | null | undefined, emailVerified: boolean = false): boolean {
-  if (!email) return false;
-  return email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && emailVerified;
-}

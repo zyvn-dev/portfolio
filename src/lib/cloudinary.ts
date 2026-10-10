@@ -1,5 +1,3 @@
-import { auth } from "./firebase/client";
-
 /**
  * Compresses an image file in-browser to WebP format before uploading.
  * Keeps aspect ratio with a max dimension of 1920px.
@@ -65,30 +63,21 @@ export async function compressImageToWebP(
 }
 
 /**
- * Uploads an image to Cloudinary using signed authentication verified by Firebase ID token.
+ * Uploads an image to Cloudinary.
+ * Auth is verified server-side via the admin JWT cookie (sent automatically with credentials).
  */
 export async function uploadImageToCloudinary(
   file: File,
   folder: string = "portfolio"
 ): Promise<string> {
-  const currentUser = auth.currentUser;
-  if (!currentUser) {
-    throw new Error("Admin authentication required to upload assets");
-  }
-
-  // Get Firebase ID token
-  const idToken = await currentUser.getIdToken();
-
   // 1. Compress image to WebP
   const compressedBlob = await compressImageToWebP(file);
 
-  // 2. Request signature from server route
+  // 2. Request signed params from server — cookie is sent automatically
   const signResponse = await fetch("/api/cloudinary/sign", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${idToken}`,
-    },
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",   // ensures the admin_token cookie is sent
     body: JSON.stringify({ folder }),
   });
 
@@ -109,10 +98,7 @@ export async function uploadImageToCloudinary(
 
   const uploadResponse = await fetch(
     `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-    {
-      method: "POST",
-      body: formData,
-    }
+    { method: "POST", body: formData }
   );
 
   if (!uploadResponse.ok) {

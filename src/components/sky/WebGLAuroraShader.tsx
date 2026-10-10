@@ -79,8 +79,8 @@ const FRAGMENT_SHADER = `
 
     float f = snoise(st * 1.5 + r + vec2(mouseWave, 0.0));
 
-    // Base background is dark void
-    vec3 bgVoid = vec3(0.027, 0.035, 0.055);
+    // Base background is near-black deep void
+    vec3 bgVoid = vec3(0.012, 0.015, 0.030);
 
     // Color mixing
     vec3 col = mix(bgVoid, uColorC, clamp(f * f * 2.2, 0.0, 1.0));

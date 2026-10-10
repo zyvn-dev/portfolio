@@ -15,75 +15,75 @@ export const ATMOSPHERE_PALETTES: Record<
   }
 > = {
   dawn: {
-    label: "Dawn Twilight",
+    label: "Terminal Dawn",
     greeting: "Good morning",
     colors: {
-      primary: "#FF7E95",
-      secondary: "#FFE3D8",
-      accent: "#FDBB2D",
-      surface: "rgba(255, 126, 149, 0.08)",
-      glow: "rgba(255, 126, 149, 0.45)",
-      gradient: "from-rose-500/20 via-orange-400/10 to-amber-300/10",
+      primary: "#00D4FF",
+      secondary: "#0099CC",
+      accent: "#7B68EE",
+      surface: "rgba(0, 212, 255, 0.06)",
+      glow: "rgba(0, 212, 255, 0.35)",
+      gradient: "from-cyan-500/15 via-blue-600/10 to-indigo-600/10",
     },
     threeColors: {
-      colorA: [1.0, 0.49, 0.58], // Rose #FF7E95
-      colorB: [1.0, 0.73, 0.18], // Amber #FDBB2D
-      colorC: [0.38, 0.16, 0.35], // Deep plum
-      particleColor: [1.0, 0.89, 0.85], // Warm peach
+      colorA: [0.0,  0.53, 0.72],
+      colorB: [0.18, 0.22, 0.62],
+      colorC: [0.03, 0.06, 0.14],
+      particleColor: [0.5, 0.85, 1.0],
     },
   },
   day: {
-    label: "Radiant Day",
+    label: "Sapphire Core",
     greeting: "Good afternoon",
     colors: {
-      primary: "#0284C7",
-      secondary: "#38BDF8",
-      accent: "#22D3EE",
-      surface: "rgba(56, 189, 248, 0.08)",
-      glow: "rgba(56, 189, 248, 0.45)",
-      gradient: "from-sky-500/20 via-cyan-400/10 to-blue-500/10",
+      primary: "#3B82F6",
+      secondary: "#60A5FA",
+      accent: "#06B6D4",
+      surface: "rgba(59, 130, 246, 0.07)",
+      glow: "rgba(59, 130, 246, 0.40)",
+      gradient: "from-blue-500/20 via-cyan-500/10 to-sky-600/10",
     },
     threeColors: {
-      colorA: [0.01, 0.52, 0.78], // Azure #0284C7
-      colorB: [0.13, 0.83, 0.93], // Cyan #22D3EE
-      colorC: [0.08, 0.18, 0.38], // Deep navy
-      particleColor: [0.65, 0.92, 1.0], // Sky crystal
+      colorA: [0.04, 0.2,  0.62],
+      colorB: [0.02, 0.55, 0.78],
+      colorC: [0.02, 0.05, 0.13],
+      particleColor: [0.55, 0.75, 1.0],
     },
   },
   dusk: {
-    label: "Golden Dusk",
+    label: "Indigo Drift",
     greeting: "Good evening",
     colors: {
-      primary: "#8B5CF6",
-      secondary: "#EC4899",
-      accent: "#F59E0B",
-      surface: "rgba(139, 92, 246, 0.08)",
-      glow: "rgba(139, 92, 246, 0.45)",
-      gradient: "from-purple-600/20 via-pink-500/15 to-amber-500/10",
+      primary: "#818CF8",
+      secondary: "#6366F1",
+      accent: "#38BDF8",
+      surface: "rgba(99, 102, 241, 0.07)",
+      glow: "rgba(129, 140, 248, 0.38)",
+      gradient: "from-indigo-500/20 via-blue-600/10 to-cyan-500/10",
     },
     threeColors: {
-      colorA: [0.55, 0.36, 0.96], // Violet #8B5CF6
-      colorB: [0.93, 0.28, 0.6],  // Magenta #EC4899
-      colorC: [0.96, 0.62, 0.04], // Amber #F59E0B
-      particleColor: [0.98, 0.82, 0.95], // Lilac glow
+      colorA: [0.22, 0.25, 0.85],
+      colorB: [0.03, 0.45, 0.75],
+      colorC: [0.03, 0.04, 0.12],
+      particleColor: [0.6, 0.65, 1.0],
     },
   },
   night: {
-    label: "Nocturnal Sky",
+    label: "Deep Space",
     greeting: "Good night",
     colors: {
-      primary: "#14B8A6",
-      secondary: "#2DD4BF",
+      primary: "#22D3EE",
+      secondary: "#0EA5E9",
       accent: "#6366F1",
-      surface: "rgba(20, 184, 166, 0.08)",
-      glow: "rgba(45, 212, 191, 0.45)",
-      gradient: "from-teal-500/20 via-indigo-600/15 to-emerald-500/10",
+      surface: "rgba(34, 211, 238, 0.06)",
+      glow: "rgba(34, 211, 238, 0.32)",
+      gradient: "from-cyan-500/15 via-indigo-700/10 to-slate-900/10",
     },
     threeColors: {
-      colorA: [0.08, 0.72, 0.65], // Teal #14B8A6
-      colorB: [0.39, 0.4, 0.95],  // Indigo #6366F1
-      colorC: [0.04, 0.07, 0.15], // Obsidian midnight
-      particleColor: [0.45, 0.98, 0.88], // Electric teal stardust
+      colorA: [0.02, 0.55, 0.65],
+      colorB: [0.2,  0.22, 0.78],
+      colorC: [0.01, 0.04, 0.10],
+      particleColor: [0.3, 0.92, 1.0],
     },
   },
 };

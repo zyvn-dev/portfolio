@@ -1,23 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { verifyAdminToken } from "@/lib/firebase/admin";
+import { jwtVerify } from "jose";
+
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || "living-sky-admin-super-secret-key-change-in-prod"
+);
 
 export async function POST(req: NextRequest) {
   try {
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    // Verify admin JWT cookie
+    const token = req.cookies.get("admin_token")?.value;
+    if (!token) {
       return NextResponse.json(
-        { message: "Unauthorized: Missing authentication token" },
+        { message: "Unauthorized: No session found" },
         { status: 401 }
       );
     }
 
-    const idToken = authHeader.split("Bearer ")[1];
-    const isAuthorized = await verifyAdminToken(idToken);
-
-    if (!isAuthorized) {
+    try {
+      await jwtVerify(token, JWT_SECRET);
+    } catch {
       return NextResponse.json(
-        { message: "Forbidden: Access restricted to authorized administrator" },
+        { message: "Forbidden: Invalid or expired session" },
         { status: 403 }
       );
     }
@@ -37,22 +41,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Cloudinary signature formula:
-    // Sort parameters alphabetically: folder=...&timestamp=...<API_SECRET>
+    // Cloudinary signature: sort parameters alphabetically
     const paramsToSign = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;
     const signature = crypto.createHash("sha1").update(paramsToSign).digest("hex");
 
-    return NextResponse.json({
-      signature,
-      timestamp,
-      apiKey,
-      cloudName,
-    });
-  } catch (error: any) {
+    return NextResponse.json({ signature, timestamp, apiKey, cloudName });
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : "Internal server error";
     console.error("Cloudinary signing error:", error);
-    return NextResponse.json(
-      { message: error?.message || "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: msg }, { status: 500 });
   }
 }
