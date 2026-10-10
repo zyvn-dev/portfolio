@@ -32,7 +32,9 @@ export default function AdminSettingsPage() {
     themeMode: "auto",
   });
 
-  const [keywordsInput, setKeywordsInput] = useState("");
+  const [keywordsInput, setKeywordsInput] = useState(
+    "Portfolio, Creative Developer, Next.js, WebGL"
+  );
 
   useEffect(() => {
     async function load() {
@@ -41,8 +43,6 @@ export default function AdminSettingsPage() {
         if (data) {
           setFormData(data);
           setKeywordsInput(data.keywords?.join(", ") || "");
-        } else {
-          setKeywordsInput(formData.keywords.join(", "));
         }
       } catch (err) {
         console.warn("Settings load:", err);

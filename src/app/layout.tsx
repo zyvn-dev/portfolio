@@ -1,10 +1,23 @@
 import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { TimeAtmosphereProvider } from "@/components/sky/TimeAtmosphereContext";
 import { LivingSkyBackground } from "@/components/sky/LivingSkyBackground";
 import { ToastProvider } from "@/components/ui/Toast";
 import { SmoothScrollProvider } from "@/components/ui/SmoothScrollProvider";
 import { CustomCursor } from "@/components/ui/CustomCursor";
+
+const sans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const display = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "The Living Sky — Personal Portfolio",
@@ -39,15 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={`dark ${sans.variable} ${display.variable}`}>
       <body className="bg-[#07090e] text-slate-100 antialiased selection:bg-teal-400 selection:text-slate-950 min-h-screen relative font-sans">
         <TimeAtmosphereProvider>
           <ToastProvider>

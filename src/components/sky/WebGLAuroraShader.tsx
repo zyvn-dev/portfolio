@@ -100,9 +100,10 @@ export const WebGLAuroraShader: React.FC = () => {
   const { atmosphere } = useTimeAtmosphere();
 
   // Color targets for smooth interpolation
-  const targetColorA = useRef(new THREE.Vector3());
-  const targetColorB = useRef(new THREE.Vector3());
-  const targetColorC = useRef(new THREE.Vector3());
+  const initialPal = ATMOSPHERE_PALETTES[atmosphere.period].threeColors;
+  const targetColorA = useRef(new THREE.Vector3(...initialPal.colorA));
+  const targetColorB = useRef(new THREE.Vector3(...initialPal.colorB));
+  const targetColorC = useRef(new THREE.Vector3(...initialPal.colorC));
 
   // Mouse coords
   const mouse = useRef({ x: 0.5, y: 0.5, targetX: 0.5, targetY: 0.5 });
@@ -135,10 +136,9 @@ export const WebGLAuroraShader: React.FC = () => {
     container.appendChild(renderer.domElement);
 
     // Uniforms
-    const pal = ATMOSPHERE_PALETTES[atmosphere.period].threeColors;
-    const currentColorA = new THREE.Vector3(...pal.colorA);
-    const currentColorB = new THREE.Vector3(...pal.colorB);
-    const currentColorC = new THREE.Vector3(...pal.colorC);
+    const currentColorA = targetColorA.current.clone();
+    const currentColorB = targetColorB.current.clone();
+    const currentColorC = targetColorC.current.clone();
 
     const uniforms = {
       uTime: { value: 0 },
