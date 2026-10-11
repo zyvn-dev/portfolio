@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 const StaticFallback: React.FC = () => (
   <div
     className="fixed inset-0 w-full h-full pointer-events-none z-0"
-    style={{ background: "#050A0F" }}
+    style={{ background: "#050812" }}
     aria-hidden="true"
   />
 );

@@ -1,109 +1,70 @@
-# The Living Sky — Personal Portfolio Template & Admin Console
+# The Living Sky — CS Tech Personal Portfolio & Admin Console
 
-An award-level, cinematic personal portfolio template engineered with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS**, **Three.js WebGL**, **Framer Motion**, **Firebase Auth & Firestore**, and **Cloudinary**.
-
----
-
-## Concept: "The Living Sky"
-
-The whole application responds organically to the visitor's **local system time**:
-- **Dawn (05:00 – 11:59)**: Sunrise peach `#FFE3D8`, rose gold `#FF7E95`, and golden mist. Greeting: *"Good morning"*.
-- **Day (12:00 – 16:59)**: Azure `#0284C7`, sky cyan `#22D3EE`, crystal atmosphere. Greeting: *"Good afternoon"*.
-- **Dusk (17:00 – 20:59)**: Twilight violet `#8B5CF6`, magenta streaks `#EC4899`, amber horizon. Greeting: *"Good evening"*.
-- **Night (21:00 – 04:59)**: Deep obsidian indigo `#0F172A`, neon teal `#14B8A6`, celestial stardust. Greeting: *"Good night"*.
-
-### Zero Hardcoded Personal Data
-Ships with **zero hardcoded personal data**. When collections are empty, the public site renders elegant skeletal shimmers and tasteful placeholder cards—never fake dummy identity content. Everything is populated dynamically from Firestore via the private `/admin` dashboard.
+An award-level personal portfolio template engineered with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS**, **Framer Motion**, **Firestore**, **EmailJS**, and **Cloudinary**.
 
 ---
 
-## 3-Tier Security Architecture
+## Concept: "The Living Sky — CS / Tech Dark Theme"
 
-Administrative authority is strictly locked down to:
-**`muhammmadzainumer@gmail.com`** (with `email_verified == true`).
-
-1. **Client UI Guard**: Any unauthenticated visitor or different Google account is immediately rejected, force-signed out, and presented with an access-denied shield.
-2. **Server Route Guard**: Next.js API route handlers verify Firebase ID tokens using `firebase-admin` before returning upload signatures or privileged operations.
-3. **Database Security Rules (`firestore.rules`)**:
-   - Content (`profile`, `education`, `certifications`, `projects`, `settings`): Public read, write strictly reserved for `muhammmadzainumer@gmail.com`.
-   - Messages (`messages`): Public create (with strict schema constraints and honeypot protection), read/update/delete strictly reserved for `muhammmadzainumer@gmail.com`.
-
----
-
-## Step-by-Step Setup Guide
-
-### 1. Firebase Setup
-1. Head to the [Firebase Console](https://console.firebase.google.com/) and create a new project.
-2. Enable **Authentication**:
-   - Go to **Build -> Authentication -> Sign-in method**.
-   - Enable **Google** provider and save your project support email.
-3. Enable **Cloud Firestore**:
-   - Go to **Build -> Firestore Database -> Create database**.
-   - Choose production mode.
-   - Copy the contents of `firestore.rules` from this repository into **Firestore Database -> Rules** and click **Publish**.
-4. Generate Web App Credentials:
-   - Go to **Project Settings -> General -> Your apps -> Add app (Web)**.
-   - Copy the `firebaseConfig` keys into your `.env.local` file (see `.env.example`).
-5. Generate Firebase Admin Service Account Key:
-   - Go to **Project Settings -> Service accounts -> Firebase Admin SDK**.
-   - Click **Generate new private key**.
-   - Copy `project_id`, `client_email`, and `private_key` into `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PRIVATE_KEY` in `.env.local`.
+The application features a smooth, high-performance **Computer Science & Tech Dark Theme**:
+- **Deep Dark Navy Base**: `#0A0E27` to `#050812` (ultra-dark with subtle midnight-blue tint).
+- **Floating Binary Stream**: Subtly animated `0`s and `1`s drifting upward in monospace at 8–10% opacity.
+- **Circuit Board Grid**: Thin cyber-cyan (`#00D4FF`) lines and pulsing solder nodes with orthogonal traces.
+- **Interactive Cursor Glow**: Soft 12% diffuse cyber-cyan and neon-green glow following user cursor physics.
+- **Accents**: Cyber Cyan (`#00D4FF`) and Neon Green (`#00FF9F`) across all buttons, cards, badges, and hovers.
+- **Accessibility**: Instant static fallback for `prefers-reduced-motion` and mobile performance optimization.
 
 ---
 
-### 2. Cloudinary Setup
-1. Create a free account at [Cloudinary](https://cloudinary.com/).
-2. From the Cloudinary Dashboard, copy:
-   - **Cloud name** -> `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`
-   - **API Key** -> `CLOUDINARY_API_KEY`
-   - **API Secret** -> `CLOUDINARY_API_SECRET`
-3. All image uploads from the admin panel are automatically compressed in-browser to modern **WebP** format before signed transfer to Cloudinary.
+## Admin Panel Access & Routing
+
+The administration panel allows managing all public portfolio sections dynamically with zero hardcoded identity data.
+
+### Routes
+- **`/admin/login`**: Dedicated private login page.
+- **`/admin/dashboard`**: Main control center displaying portfolio statistics and quick management shortcuts.
+- **`/admin/profile`**: Full Name, Headline, Bio paragraphs, Portrait, Location, and Social Links.
+- **`/admin/education`**: Institute, Education Level, Years, and Badges.
+- **`/admin/certifications`**: Certifications, issuing authority, year, and verification links.
+- **`/admin/projects`**: Bento grid showcase, cover images, descriptions, tags, and dynamic external links.
+- **`/admin/messages`**: Transmission inbox, unread counts, and message deletion.
+- **`/admin/settings`**: SEO meta tags, site title, and public section visibility toggles.
+
+### Authentication Flow
+1. Click **"Admin"** in the navbar to open `/admin/login`.
+2. Enter your root admin credentials (configured in `.env.local` via `ADMIN_EMAIL` and `ADMIN_PASSWORD`).
+3. Upon validation, the server issues a signed, httpOnly `admin_session` JWT cookie (24-hour expiration).
+4. Edge middleware validates this cookie on all `/admin/*` routes. Unauthenticated requests are redirected back to `/admin/login`.
+5. Clicking **"Sign Out"** clears the session cookie and returns to `/`.
+
+> **Admin Credentials Reference (Private Note):**
+> - Email: `muhammmadzainumer@gmail.com`
+> - Password: `Opportunity@8478`
 
 ---
 
-### 3. Local Development
+## Contact Form Setup (EmailJS Direct to Gmail)
+
+Transmissions sent from the public site route directly to your Gmail inbox via client-side EmailJS (with a server-side backup):
+
+1. Create a free account at [EmailJS](https://www.emailjs.com/).
+2. **Email Services** -> Click **Add Service** -> Select **Gmail** -> Connect `muhammmadzainumer@gmail.com`.
+3. **Email Templates** -> Create a template with:
+   - To Email: `muhammmadzainumer@gmail.com`
+   - Content: `From: {{from_name}} ({{from_email}})\n\n{{message}}`
+4. Copy the keys to `.env.local` and your Vercel Project Settings:
+   - `NEXT_PUBLIC_EMAILJS_SERVICE_ID`
+   - `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID`
+   - `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY`
+
+---
+
+## Deployment & Build
 
 ```bash
-# 1. Install dependencies
-npm install
+# Run production build
+npm run build
 
-# 2. Duplicate environment template
-cp .env.example .env.local
-
-# 3. Start local development server
-npm run dev
+# Start production server
+npm run start
 ```
-
-Navigate to `http://localhost:3000` to view the public site, or `http://localhost:3000/admin` to open the administrative console.
-
----
-
-### 4. Deploying to Vercel
-
-1. Push your code to GitHub, GitLab, or Bitbucket.
-2. Import the repository in [Vercel](https://vercel.com/new).
-3. Under **Environment Variables**, add all keys from your `.env.local` file:
-   - `NEXT_PUBLIC_FIREBASE_API_KEY`
-   - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
-   - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
-   - `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
-   - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
-   - `NEXT_PUBLIC_FIREBASE_APP_ID`
-   - `FIREBASE_PROJECT_ID`
-   - `FIREBASE_CLIENT_EMAIL`
-   - `FIREBASE_PRIVATE_KEY`
-   - `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`
-   - `CLOUDINARY_API_KEY`
-   - `CLOUDINARY_API_SECRET`
-4. Click **Deploy**. Your living portfolio is live in under 2 minutes!
-
----
-
-## Tech Stack Summary
-- **Framework**: Next.js 15+ (App Router, Server Components & Route Handlers)
-- **Styling**: Tailwind CSS + Custom Liquid Glass Design Tokens
-- **WebGL Background**: Three.js custom simplex noise shader + celestial particulate field
-- **Interactions**: Framer Motion, Lenis Smooth Inertia Scrolling, Custom Magnetic Physics Cursor
-- **State & Cloud**: Firebase Auth (Google Sign-In), Firestore Realtime Database
-- **Media**: HTML5 Canvas WebP Compressor + Signed Cloudinary CDN
-- **Validation**: Zod (Client & Server schemas)

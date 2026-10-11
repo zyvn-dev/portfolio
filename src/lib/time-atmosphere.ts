@@ -15,75 +15,75 @@ export const ATMOSPHERE_PALETTES: Record<
   }
 > = {
   dawn: {
-    label: "Terminal Dawn",
+    label: "Cyber Dawn",
     greeting: "Good morning",
     colors: {
-      primary: "#00D4FF",
-      secondary: "#0099CC",
-      accent: "#7B68EE",
-      surface: "rgba(0, 212, 255, 0.06)",
+      primary: "#00D4FF", // Cyber Cyan
+      secondary: "#00FF9F", // Neon Green
+      accent: "#38BDF8", // Electric Sky
+      surface: "rgba(0, 255, 159, 0.06)",
       glow: "rgba(0, 212, 255, 0.35)",
-      gradient: "from-cyan-500/15 via-blue-600/10 to-indigo-600/10",
+      gradient: "from-cyan-500/20 via-emerald-500/10 to-blue-500/10",
     },
     threeColors: {
-      colorA: [0.0,  0.53, 0.72],
-      colorB: [0.18, 0.22, 0.62],
-      colorC: [0.03, 0.06, 0.14],
-      particleColor: [0.5, 0.85, 1.0],
+      colorA: [0.0, 0.83, 1.0],
+      colorB: [0.0, 1.0, 0.62],
+      colorC: [0.02, 0.04, 0.09],
+      particleColor: [0.0, 0.83, 1.0],
     },
   },
   day: {
-    label: "Sapphire Core",
+    label: "Digital Matrix",
     greeting: "Good afternoon",
     colors: {
-      primary: "#3B82F6",
-      secondary: "#60A5FA",
-      accent: "#06B6D4",
-      surface: "rgba(59, 130, 246, 0.07)",
-      glow: "rgba(59, 130, 246, 0.40)",
-      gradient: "from-blue-500/20 via-cyan-500/10 to-sky-600/10",
+      primary: "#00FF9F", // Neon Green
+      secondary: "#00D4FF", // Cyber Cyan
+      accent: "#22D3EE", // Electric Cyan
+      surface: "rgba(0, 212, 255, 0.06)",
+      glow: "rgba(0, 255, 159, 0.35)",
+      gradient: "from-emerald-500/20 via-cyan-500/15 to-teal-500/10",
     },
     threeColors: {
-      colorA: [0.04, 0.2,  0.62],
-      colorB: [0.02, 0.55, 0.78],
-      colorC: [0.02, 0.05, 0.13],
-      particleColor: [0.55, 0.75, 1.0],
+      colorA: [0.0, 1.0, 0.62],
+      colorB: [0.0, 0.83, 1.0],
+      colorC: [0.02, 0.04, 0.09],
+      particleColor: [0.0, 1.0, 0.62],
     },
   },
   dusk: {
-    label: "Indigo Drift",
+    label: "Neon Twilight",
     greeting: "Good evening",
     colors: {
-      primary: "#818CF8",
-      secondary: "#6366F1",
-      accent: "#38BDF8",
-      surface: "rgba(99, 102, 241, 0.07)",
-      glow: "rgba(129, 140, 248, 0.38)",
-      gradient: "from-indigo-500/20 via-blue-600/10 to-cyan-500/10",
+      primary: "#00D4FF", // Cyber Cyan
+      secondary: "#00FF9F", // Neon Green
+      accent: "#14B8A6", // Electric Teal
+      surface: "rgba(0, 255, 159, 0.06)",
+      glow: "rgba(0, 212, 255, 0.35)",
+      gradient: "from-cyan-500/20 via-teal-500/15 to-emerald-500/10",
     },
     threeColors: {
-      colorA: [0.22, 0.25, 0.85],
-      colorB: [0.03, 0.45, 0.75],
-      colorC: [0.03, 0.04, 0.12],
-      particleColor: [0.6, 0.65, 1.0],
+      colorA: [0.0, 0.83, 1.0],
+      colorB: [0.0, 1.0, 0.62],
+      colorC: [0.02, 0.04, 0.09],
+      particleColor: [0.0, 0.83, 1.0],
     },
   },
   night: {
-    label: "Deep Space",
+    label: "Deep Terminal",
     greeting: "Good night",
     colors: {
-      primary: "#22D3EE",
-      secondary: "#0EA5E9",
-      accent: "#6366F1",
-      surface: "rgba(34, 211, 238, 0.06)",
-      glow: "rgba(34, 211, 238, 0.32)",
-      gradient: "from-cyan-500/15 via-indigo-700/10 to-slate-900/10",
+      primary: "#00FF9F", // Neon Green
+      secondary: "#00D4FF", // Cyber Cyan
+      accent: "#06B6D4", // Bright Cyan
+      surface: "rgba(0, 212, 255, 0.06)",
+      glow: "rgba(0, 255, 159, 0.35)",
+      gradient: "from-emerald-500/20 via-cyan-500/15 to-slate-900/10",
     },
     threeColors: {
-      colorA: [0.02, 0.55, 0.65],
-      colorB: [0.2,  0.22, 0.78],
-      colorC: [0.01, 0.04, 0.10],
-      particleColor: [0.3, 0.92, 1.0],
+      colorA: [0.0, 1.0, 0.62],
+      colorB: [0.0, 0.83, 1.0],
+      colorC: [0.02, 0.04, 0.09],
+      particleColor: [0.0, 1.0, 0.62],
     },
   },
 };

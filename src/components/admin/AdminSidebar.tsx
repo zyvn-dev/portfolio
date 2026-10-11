@@ -18,7 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { label: "Overview", href: "/admin", icon: LayoutDashboard },
+  { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Profile", href: "/admin/profile", icon: User },
   { label: "Education", href: "/admin/education", icon: GraduationCap },
   { label: "Certifications", href: "/admin/certifications", icon: Award },
@@ -31,7 +31,11 @@ export const AdminSidebar: React.FC = () => {
   const pathname = usePathname();
 
   const handleSignOut = async () => {
-    await fetch("/api/admin/logout", { method: "POST" });
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+    } catch {
+      // ignore
+    }
     window.location.href = "/";
   };
 
@@ -40,15 +44,15 @@ export const AdminSidebar: React.FC = () => {
       {/* Brand header */}
       <div className="p-6 border-b border-white/10 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl glass-pill flex items-center justify-center text-[var(--sky-primary)] border border-white/10">
+          <div className="w-8 h-8 rounded-xl glass-pill flex items-center justify-center text-[var(--sky-primary)] border border-cyan-500/20 shadow-md shadow-cyan-500/10">
             <ShieldCheck className="w-4 h-4" />
           </div>
           <div>
             <h2 className="text-sm font-semibold text-white tracking-tight">
               SKY CONSOLE
             </h2>
-            <span className="text-[10px] font-mono text-[var(--sky-primary)] block">
-              PRIVATE ADMIN
+            <span className="text-[10px] font-mono text-[var(--sky-secondary)] block">
+              ROOT ADMIN
             </span>
           </div>
         </div>
@@ -58,7 +62,9 @@ export const AdminSidebar: React.FC = () => {
       <nav className="p-4 flex-1 space-y-1">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href;
+          const isActive =
+            pathname === item.href ||
+            (item.href === "/admin/dashboard" && pathname === "/admin");
 
           return (
             <Link
@@ -97,7 +103,7 @@ export const AdminSidebar: React.FC = () => {
         <button
           type="button"
           onClick={handleSignOut}
-          className="w-full flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-xs font-mono text-rose-300 hover:bg-rose-500/10 transition-colors"
+          className="w-full flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-xs font-mono text-rose-300 hover:bg-rose-500/10 transition-colors cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5" />
           <span>Sign Out</span>

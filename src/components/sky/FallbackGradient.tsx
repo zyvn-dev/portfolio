@@ -13,7 +13,7 @@ export const FallbackGradient: React.FC = () => {
       aria-hidden="true"
     >
       {/* Background base */}
-      <div className="absolute inset-0 bg-[#07090e]" />
+      <div className="absolute inset-0 bg-[#050812]" />
 
       {/* Atmospheric radial orbs */}
       <div

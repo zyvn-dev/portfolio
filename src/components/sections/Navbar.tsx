@@ -99,11 +99,11 @@ export const Navbar: React.FC = () => {
             <AtmosphereBadge />
 
             <Link
-              href="/admin"
-              className="hidden lg:flex items-center gap-1 text-[11px] font-mono text-white/50 hover:text-white px-2.5 py-1.5 rounded-full glass-panel hover:border-white/20 transition-colors"
-              title="Admin Panel"
+              href="/admin/login"
+              className="hidden lg:flex items-center gap-1.5 text-[11px] font-mono text-white/60 hover:text-white px-3 py-1.5 rounded-full glass-panel hover:border-cyan-500/30 transition-all group"
+              title="Admin Panel Login"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-[var(--sky-primary)]" />
+              <ShieldCheck className="w-3.5 h-3.5 text-[var(--sky-primary)] group-hover:scale-110 transition-transform" />
               <span>Admin</span>
             </Link>
 
@@ -161,7 +161,7 @@ export const Navbar: React.FC = () => {
 
             <div className="pt-6 border-t border-white/10 flex items-center justify-between">
               <Link
-                href="/admin"
+                href="/admin/login"
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center gap-2 text-xs font-mono text-white/60 hover:text-white"
               >

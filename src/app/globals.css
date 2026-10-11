@@ -7,13 +7,13 @@
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-display: 'Clash Display', 'Cabinet Grotesk', -apple-system, sans-serif;
     
-    --sky-primary: #14b8a6;
-    --sky-secondary: #2dd4bf;
-    --sky-accent: #6366f1;
-    --sky-glow: rgba(45, 212, 191, 0.35);
-    --sky-surface: rgba(20, 184, 166, 0.06);
+    --sky-primary: #00D4FF;
+    --sky-secondary: #00FF9F;
+    --sky-accent: #22D3EE;
+    --sky-glow: rgba(0, 212, 255, 0.35);
+    --sky-surface: rgba(0, 255, 159, 0.06);
     
-    --bg-dark: #07090e;
+    --bg-dark: #050812;
     --fg-light: #f8fafc;
   }
 

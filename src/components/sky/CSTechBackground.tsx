@@ -2,146 +2,193 @@
 
 import React, { useEffect, useRef } from "react";
 
-// Floating binary/hex characters
-const CHARS = "01010110011001000110000100110001001100110011010000110101001100110100001101000100 01 FF 00 A3 7F 1010 0110 1100";
-const CHAR_POOL = "01".split("");
-
 interface Particle {
   x: number;
   y: number;
   speed: number;
   opacity: number;
   size: number;
-  char: string;
+  char: "0" | "1";
   drift: number;
+  color: string;
+}
+
+interface CircuitTrace {
+  x: number;
+  y: number;
+  length: number;
+  horizontal: boolean;
+  pulsePhase: number;
 }
 
 export const CSTechBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouse = useRef({ x: 0.5, y: 0.5 });
+  const mouse = useRef({ x: 0.5, y: 0.5, currentX: 0.5, currentY: 0.5 });
   const raf = useRef<number>(0);
 
   useEffect(() => {
+    // Check prefers-reduced-motion
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let W = window.innerWidth;
-    let H = window.innerHeight;
-    canvas.width = W;
-    canvas.height = H;
+    let W = (canvas.width = window.innerWidth);
+    let H = (canvas.height = window.innerHeight);
+    const isMobile = W < 768;
 
-    // Generate floating binary particles
-    const COUNT = Math.min(Math.floor((W * H) / 14000), 120);
-    const particles: Particle[] = Array.from({ length: COUNT }, () => ({
+    // Floating binary particles (0s and 1s, opacity 8-10%, slow upward drift)
+    const count = isMobile ? 35 : Math.min(Math.floor((W * H) / 16000), 90);
+    const particles: Particle[] = Array.from({ length: count }, () => ({
       x: Math.random() * W,
       y: Math.random() * H,
-      speed: 0.15 + Math.random() * 0.35,
-      opacity: 0.04 + Math.random() * 0.08,
-      size: 9 + Math.floor(Math.random() * 5),
-      char: CHAR_POOL[Math.floor(Math.random() * CHAR_POOL.length)],
-      drift: (Math.random() - 0.5) * 0.4,
+      speed: 0.18 + Math.random() * 0.3,
+      opacity: isMobile ? 0.06 : 0.08 + Math.random() * 0.02, // 8-10% on desktop
+      size: isMobile ? 10 : 11 + Math.floor(Math.random() * 3),
+      char: Math.random() > 0.5 ? "1" : "0",
+      drift: (Math.random() - 0.5) * 0.25,
+      color: Math.random() > 0.35 ? "#00D4FF" : "#00FF9F",
     }));
 
-    // Circuit nodes
-    interface Node { x: number; y: number; r: number; pulse: number; speed: number }
-    const NODES: Node[] = Array.from({ length: 18 }, () => ({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      r: 1.5 + Math.random() * 2,
-      pulse: Math.random() * Math.PI * 2,
-      speed: 0.004 + Math.random() * 0.006,
-    }));
+    // Circuit board grid nodes & traces
+    const GRID = isMobile ? 80 : 64;
+    const traces: CircuitTrace[] = [];
+    for (let x = GRID; x < W; x += GRID * 2) {
+      for (let y = GRID; y < H; y += GRID * 2) {
+        if (Math.random() > 0.45) {
+          traces.push({
+            x,
+            y,
+            length: GRID * (1 + Math.floor(Math.random() * 2)),
+            horizontal: Math.random() > 0.5,
+            pulsePhase: Math.random() * Math.PI * 2,
+          });
+        }
+      }
+    }
 
-    let t = 0;
+    let frame = 0;
 
     const draw = () => {
-      t += 1;
+      frame += 1;
 
-      // Deep dark base
-      ctx.fillStyle = "#050A0F";
+      // ── 1. Deep Dark Base (#050812 with subtle gradient to #0A0E27) ───
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+      bgGrad.addColorStop(0, "#0A0E27");
+      bgGrad.addColorStop(1, "#050812");
+      ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, W, H);
 
-      // ── Cursor radial glow ────────────────────────────────────────────────
-      const gx = mouse.current.x * W;
-      const gy = mouse.current.y * H;
-      const grd = ctx.createRadialGradient(gx, gy, 0, gx, gy, W * 0.35);
-      grd.addColorStop(0, "rgba(0,212,255,0.09)");
-      grd.addColorStop(0.5, "rgba(0,255,159,0.04)");
-      grd.addColorStop(1, "transparent");
-      ctx.fillStyle = grd;
+      // ── 2. Soft Cursor-Following Glow (cyan/green, diffuse, 12% opacity) ───
+      mouse.current.currentX += (mouse.current.x - mouse.current.currentX) * 0.06;
+      mouse.current.currentY += (mouse.current.y - mouse.current.currentY) * 0.06;
+      const gx = mouse.current.currentX * W;
+      const gy = mouse.current.currentY * H;
+      const glowRadius = isMobile ? W * 0.4 : W * 0.32;
+
+      const cursorGlow = ctx.createRadialGradient(gx, gy, 0, gx, gy, glowRadius);
+      cursorGlow.addColorStop(0, "rgba(0, 212, 255, 0.12)"); // 12% diffuse cyan
+      cursorGlow.addColorStop(0.4, "rgba(0, 255, 159, 0.05)"); // soft green ring
+      cursorGlow.addColorStop(1, "rgba(0, 212, 255, 0)");
+      ctx.fillStyle = cursorGlow;
       ctx.fillRect(0, 0, W, H);
 
-      // ── Circuit grid lines ────────────────────────────────────────────────
-      const GRID = 64;
-      ctx.strokeStyle = "rgba(0,212,255,0.045)";
-      ctx.lineWidth = 0.5;
+      // ── 3. Animated Circuit Board Lines (thin cyan #00D4FF, ~6% opacity) ───
+      const baseAlpha = isMobile ? 0.035 : 0.06;
+      const pulseAlpha = baseAlpha + 0.02 * Math.sin(frame * 0.025);
+
+      // Background circuit grid
+      ctx.lineWidth = 0.6;
+      ctx.strokeStyle = `rgba(0, 212, 255, ${baseAlpha * 0.6})`;
       for (let x = 0; x < W; x += GRID) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, H);
+        ctx.stroke();
       }
       for (let y = 0; y < H; y += GRID) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(W, y);
+        ctx.stroke();
       }
 
-      // ── Pulsing circuit nodes ─────────────────────────────────────────────
-      NODES.forEach((n) => {
-        n.pulse += n.speed;
-        const alpha = 0.06 + 0.06 * Math.sin(n.pulse);
+      // Circuit PCB Traces and Nodes
+      traces.forEach((t) => {
+        const traceAlpha = baseAlpha + 0.025 * Math.sin(frame * 0.03 + t.pulsePhase);
+        ctx.strokeStyle = `rgba(0, 212, 255, ${traceAlpha})`;
+        ctx.lineWidth = 1.2;
+
         ctx.beginPath();
-        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,212,255,${alpha})`;
+        ctx.moveTo(t.x, t.y);
+        if (t.horizontal) {
+          ctx.lineTo(t.x + t.length, t.y);
+          // 45 degree turn on circuit trace
+          ctx.lineTo(t.x + t.length + 12, t.y + 12);
+        } else {
+          ctx.lineTo(t.x, t.y + t.length);
+          ctx.lineTo(t.x + 12, t.y + t.length + 12);
+        }
+        ctx.stroke();
+
+        // Circuit node solder point
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 255, 159, ${traceAlpha * 1.5})`;
         ctx.fill();
-        // Connect nearby nodes with faint lines
-        NODES.forEach((m) => {
-          const dx = m.x - n.x, dy = m.y - n.y;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < 160 && d > 0) {
-            ctx.beginPath();
-            ctx.moveTo(n.x, n.y);
-            ctx.lineTo(m.x, m.y);
-            ctx.strokeStyle = `rgba(0,212,255,${0.025 * (1 - d / 160)})`;
-            ctx.lineWidth = 0.4;
-            ctx.stroke();
-          }
-        });
       });
 
-      // ── Floating binary characters ────────────────────────────────────────
-      ctx.font = `${particles[0]?.size ?? 11}px 'Courier New', monospace`;
+      // ── 4. Floating Binary Code (0s and 1s monospace, slow upward drift) ───
       particles.forEach((p) => {
-        // Randomise char occasionally
-        if (Math.random() < 0.004) p.char = CHAR_POOL[Math.floor(Math.random() * CHAR_POOL.length)];
+        // Occasionally flip bit
+        if (Math.random() < 0.005) {
+          p.char = p.char === "0" ? "1" : "0";
+        }
+
         p.y -= p.speed;
         p.x += p.drift * 0.3;
-        if (p.y < -20) { p.y = H + 10; p.x = Math.random() * W; }
+
+        // Wrap around
+        if (p.y < -20) {
+          p.y = H + 20;
+          p.x = Math.random() * W;
+        }
         if (p.x < 0) p.x = W;
         if (p.x > W) p.x = 0;
-        ctx.font = `${p.size}px 'Courier New', monospace`;
-        ctx.fillStyle = `rgba(0,255,159,${p.opacity})`;
+
+        ctx.font = `${p.size}px 'Courier New', Courier, monospace`;
+        ctx.fillStyle =
+          p.color === "#00FF9F"
+            ? `rgba(0, 255, 159, ${p.opacity})`
+            : `rgba(0, 212, 255, ${p.opacity})`;
         ctx.fillText(p.char, p.x, p.y);
       });
 
       raf.current = requestAnimationFrame(draw);
     };
 
-    const onMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent) => {
       mouse.current.x = e.clientX / W;
       mouse.current.y = e.clientY / H;
     };
-    const onResize = () => {
-      W = window.innerWidth; H = window.innerHeight;
-      canvas.width = W; canvas.height = H;
+
+    const handleResize = () => {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
     };
 
-    window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("resize", onResize);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("resize", handleResize);
     draw();
 
     return () => {
       cancelAnimationFrame(raf.current);
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
