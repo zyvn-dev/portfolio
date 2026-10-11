@@ -2,46 +2,33 @@
 
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { FallbackGradient } from "./FallbackGradient";
 
-const WebGLAuroraShader = dynamic(
-  () =>
-    import("./WebGLAuroraShader").then((mod) => ({
-      default: mod.WebGLAuroraShader,
-    })),
-  { ssr: false, loading: () => <FallbackGradient /> }
+// Dark static fallback for prefers-reduced-motion or if canvas isn't ready
+const StaticFallback: React.FC = () => (
+  <div
+    className="fixed inset-0 w-full h-full pointer-events-none z-0"
+    style={{ background: "#050A0F" }}
+    aria-hidden="true"
+  />
+);
+
+const CSTechBackground = dynamic(
+  () => import("./CSTechBackground").then((m) => ({ default: m.CSTechBackground })),
+  { ssr: false, loading: () => <StaticFallback /> }
 );
 
 export const LivingSkyBackground: React.FC = () => {
-  const [shouldRenderWebGL, setShouldRenderWebGL] = useState(false);
+  const [showCanvas, setShowCanvas] = useState(false);
 
   useEffect(() => {
-    // Check prefers-reduced-motion
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mediaQuery.matches) {
-      setShouldRenderWebGL(false);
-      return;
-    }
-
-    // Check WebGL support
-    try {
-      const canvas = document.createElement("canvas");
-      const gl =
-        canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-      if (gl) {
-        setShouldRenderWebGL(true);
-      } else {
-        setShouldRenderWebGL(false);
-      }
-    } catch {
-      setShouldRenderWebGL(false);
-    }
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!mq.matches) setShowCanvas(true);
   }, []);
 
   return (
     <>
-      <FallbackGradient />
-      {shouldRenderWebGL && <WebGLAuroraShader />}
+      <StaticFallback />
+      {showCanvas && <CSTechBackground />}
       <div className="noise-overlay" aria-hidden="true" />
     </>
   );

@@ -9,7 +9,7 @@ const JWT_SECRET = new TextEncoder().encode(
 export async function POST(req: NextRequest) {
   try {
     // Verify admin JWT cookie
-    const token = req.cookies.get("admin_token")?.value;
+    const token = req.cookies.get("admin_session")?.value;
     if (!token) {
       return NextResponse.json(
         { message: "Unauthorized: No session found" },

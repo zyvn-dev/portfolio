@@ -86,9 +86,7 @@ export default function HomePage() {
         <CertificationsSection certifications={certifications} />
       )}
       {visibility.projects && <ProjectsSection projects={projects} />}
-      {visibility.contact && (
-        <ContactSection directEmail={profile?.email} />
-      )}
+      {visibility.contact && <ContactSection />}
 
       <Footer profile={profile} />
     </main>

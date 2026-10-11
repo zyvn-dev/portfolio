@@ -43,7 +43,9 @@ export const AdminAuthGuard: React.FC<AdminAuthGuardProps> = ({ children }) => {
       });
 
       if (res.ok) {
-        setStatus("authenticated");
+        // Hard navigation so middleware re-evaluates the new cookie
+        window.location.href = "/admin";
+        return;
       } else {
         const data = await res.json();
         setError(data.message || "Invalid credentials. Please try again.");
